@@ -12,9 +12,26 @@ export const UIManager = {
         this.scoreLabel = document.getElementById('current-score');
         this.hiScoreLabel = document.getElementById('hi-score');
         this.fpsLabel = document.querySelector('#fps-counter span');
-        this.menuPanel = document.getElementById('main-menu');
-        this.gameOverPanel = document.getElementById('game-over-panel');
+        this.menuPanel = document.getElementById('native-ui-layer');
         this.settingsPanel = document.getElementById('settings-panel');
+        this.scoreContainer = document.getElementById('score-container');
+        this.canvas = document.getElementById('game-canvas');
+        this.startHint = document.getElementById('start-hint');
+        
+        // Initial state
+        this.canvas.classList.add('blurred');
+        this.scoreContainer.classList.add('hidden');
+        
+        const searchForm = document.getElementById('search-form');
+        if (searchForm) {
+            searchForm.addEventListener('submit', (e) => {
+                // If it's empty, prevent default
+                const input = document.getElementById('search-input');
+                if (!input.value.trim()) {
+                    e.preventDefault();
+                }
+            });
+        }
         
         document.getElementById('settings-button').addEventListener('click', () => {
             this.settingsPanel.classList.toggle('hidden');
@@ -64,11 +81,15 @@ export const UIManager = {
     
     hideOverlays() {
         this.menuPanel.classList.add('hidden');
-        this.gameOverPanel.classList.add('hidden');
         this.settingsPanel.classList.add('hidden');
+        this.canvas.classList.remove('blurred');
+        this.scoreContainer.classList.remove('hidden');
     },
     
     showGameOver() {
-        this.gameOverPanel.classList.remove('hidden');
+        this.startHint.innerHTML = 'Press <kbd>SPACE</kbd> to restart the game';
+        this.menuPanel.classList.remove('hidden');
+        this.canvas.classList.add('blurred');
+        this.scoreContainer.classList.add('hidden');
     }
 };

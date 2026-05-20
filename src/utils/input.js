@@ -16,6 +16,7 @@ export function setupInput() {
         }
         
         if (e.code === 'ArrowDown') {
+            GameState.downKeyHeld = true;
             if (GameState.currentPhase === 'playing') {
                 duckDino();
             }
@@ -31,6 +32,7 @@ export function setupInput() {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         
         if (e.code === 'ArrowDown') {
+            GameState.downKeyHeld = false;
             if (GameState.currentPhase === 'playing') {
                 stopDuckDino();
             }

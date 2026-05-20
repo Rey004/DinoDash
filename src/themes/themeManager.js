@@ -36,6 +36,8 @@ export const ThemeManager = {
 
         // Logo
         root.style.setProperty('--logo-gradient',   t.logoGradient);
+        root.style.setProperty('--logo-bg-color',   t.logoBg || '#ffffff');
+        root.style.setProperty('--logo-char-color', t.logoChar || '#191a14');
 
         // Panels / surfaces
         root.style.setProperty('--panel-bg',        t.panelBg);

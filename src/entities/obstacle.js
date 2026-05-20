@@ -28,7 +28,7 @@ export function updateObstacles(dt) {
     for (let i = obstacles.length - 1; i >= 0; i--) {
         let obs = obstacles[i];
         obs.x -= GameState.speed * (dt / 16);
-        
+
         if (obs.x + obs.width < 0) {
             obstacles.splice(i, 1);
         }
@@ -41,9 +41,9 @@ function spawnObstacle() {
         { width: 34, height: 35, yOffset: 0, spriteName: 'small-obstacle' }, // Two small
         { width: 25, height: 50, yOffset: 0, spriteName: 'large-obstacle' }, // Large cactus
         { width: 50, height: 50, yOffset: 0, spriteName: 'large-obstacle' }, // Two large
-        { width: 46, height: 40, yOffset: 25, spriteName: null }, // Pterodactyl low
-        { width: 46, height: 40, yOffset: 50, spriteName: null }, // Pterodactyl mid
-        { width: 46, height: 40, yOffset: 75, spriteName: null }, // Pterodactyl high
+        { width: 46, height: 40, yOffset: 25, spriteName: 'small-fly' }, // Fly low
+        { width: 46, height: 40, yOffset: 50, spriteName: 'large-fly' }, // Fly mid
+        { width: 46, height: 40, yOffset: 75, spriteName: 'small-fly' }, // Fly high
     ];
     
     let allowedTypes = types.slice(0, 4); // Only ground early on
@@ -104,7 +104,7 @@ export function drawObstacles() {
         if (obs.spriteName) {
             sprite = AssetLoader.getSprite(themeName, obs.spriteName);
         }
-        
+
         if (sprite) {
             const scale = 2.0;
             const drawWidth = obs.width * scale;

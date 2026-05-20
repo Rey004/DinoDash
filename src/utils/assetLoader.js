@@ -3,7 +3,11 @@ export const AssetLoader = {
     
     async loadThemeAssets(themeName) {
         // We can expand this list as more assets are added
-        const assets = ['idle', 'run-1', 'run-2', 'duck-1', 'duck-2', 'dead', 'small-obstacle', 'large-obstacle', 'ground', 'background'];
+        const assets = [
+            'idle', 'run-1', 'run-2', 'duck-1', 'duck-2', 'dead',
+            'small-obstacle', 'large-obstacle', 'small-fly', 'large-fly',
+            'ground', 'background',
+        ];
         
         const promises = assets.map(asset => {
             return new Promise(resolve => {

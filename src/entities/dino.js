@@ -5,11 +5,17 @@ import { ThemeManager } from '../themes/themeManager.js';
 import { playSound } from '../audio/audioManager.js';
 import { AssetLoader } from '../utils/assetLoader.js';
 
+const BLOCK = 47;
+const DINO_STAND_WIDTH = 44;
+const DINO_STAND_HEIGHT = BLOCK * 2;
+const DINO_DUCK_WIDTH = 59;
+const DINO_DUCK_HEIGHT = BLOCK;
+
 export const dino = {
     x: 50,
     y: 0,
-    width: 44,
-    height: 47,
+    width: DINO_STAND_WIDTH,
+    height: DINO_STAND_HEIGHT,
     vy: 0,
     isJumping: false,
     isDucking: false,
@@ -17,10 +23,21 @@ export const dino = {
 };
 
 export function initDino() {
+    resetDino();
+}
+
+export function resetDino() {
+    GameState.downKeyHeld = false;
+    dino.isJumping = false;
+    dino.isDucking = false;
+    dino.vy = 0;
+    dino.width = DINO_STAND_WIDTH;
+    dino.height = DINO_STAND_HEIGHT;
     dino.y = GameState.GROUND_Y - dino.height;
 }
 
 export function jumpDino() {
+    if (dino.isDucking) return;
     if (!dino.isJumping) {
         dino.isJumping = true;
         dino.vy = GameState.JUMP_VELOCITY;
@@ -32,20 +49,19 @@ export function jumpDino() {
 export function duckDino() {
     if (!dino.isJumping && !dino.isDucking) {
         dino.isDucking = true;
-        dino.width = 59;
-        dino.height = 25;
+        dino.width = DINO_DUCK_WIDTH;
+        dino.height = DINO_DUCK_HEIGHT;
         dino.y = GameState.GROUND_Y - dino.height;
     } else if (dino.isJumping) {
-        // Fast fall
-        dino.vy += GameState.GRAVITY * 1;
+        dino.vy += GameState.GRAVITY;
     }
 }
 
 export function stopDuckDino() {
     if (dino.isDucking) {
         dino.isDucking = false;
-        dino.width = 44;
-        dino.height = 47;
+        dino.width = DINO_STAND_WIDTH;
+        dino.height = DINO_STAND_HEIGHT;
         dino.y = GameState.GROUND_Y - dino.height;
     }
 }
@@ -61,6 +77,9 @@ export function updateDino(dt) {
             dino.vy = 0;
             emitDust(dino.x + dino.width / 2, dino.y + dino.height, 5);
             playSound('land');
+            if (GameState.downKeyHeld) {
+                duckDino();
+            }
         }
     }
 }
@@ -92,9 +111,16 @@ export function drawDino() {
     if (sprite) {
         // Draw the sprite larger than the hitbox to make it pop,
         // but keep the bottom aligned to the ground so it doesn't float.
-        const scale = 3.0;
-        const drawWidth = dino.width * scale;
+        const scale = 1.5;
+        let originalWidth = DINO_STAND_WIDTH;
+        let originalHeight = BLOCK;
+        if (dino.isDucking) {
+            originalWidth = DINO_DUCK_WIDTH;
+            originalHeight = BLOCK / 2;
+        }
+        
         const drawHeight = dino.height * scale;
+        const drawWidth = drawHeight * (originalWidth / originalHeight);
         const offsetX = (drawWidth - dino.width) / 2;
         const offsetY = drawHeight - dino.height;
         

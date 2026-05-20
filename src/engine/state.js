@@ -8,7 +8,9 @@ export const GameState = {
     canvasHeight: 0,
     isDarkMode: false,
     enhancementsEnabled: true,
-    
+    downKeyHeld: false,
+    gameStartTime: 0,
+
     // Config
     GRAVITY: 0.6,
     JUMP_VELOCITY: -12.5,
@@ -22,5 +24,6 @@ export const GameState = {
         this.speed = 6.0;
         this.distanceMeter = 0;
         this.currentPhase = 'playing';
+        this.gameStartTime = performance.now();
     }
 };

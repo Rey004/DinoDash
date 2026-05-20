@@ -1,10 +1,11 @@
 import { GameState } from './state.js';
 import { Renderer } from '../rendering/renderer.js';
-import { updateDino, drawDino, jumpDino, duckDino, stopDuckDino } from '../entities/dino.js';
+import { updateDino, drawDino, resetDino } from '../entities/dino.js';
 import { updateObstacles, drawObstacles, resetObstacles, checkCollisions } from '../entities/obstacle.js';
 import { updateEnvironment, drawEnvironment } from '../entities/environment.js';
 import { updateParticles, drawParticles } from '../rendering/particles.js';
 import { UIManager } from '../ui/uiManager.js';
+import { GameStats } from '../utils/gameStats.js';
 
 let lastTime = 0;
 let animationId = null;
@@ -73,18 +74,20 @@ export const GameLoop = {
     
     gameOver() {
         GameState.currentPhase = 'gameover';
-        if (GameState.score > GameState.hiScore) {
-            GameState.hiScore = GameState.score;
-            UIManager.updateHiScore(GameState.hiScore);
-            // Save to local storage
-            chrome.storage?.local.set({ hiScore: GameState.hiScore });
-        }
+        const durationMs = performance.now() - (GameState.gameStartTime || performance.now());
+        GameStats.recordGameEnd(GameState.score, durationMs);
+        GameState.hiScore = GameStats.data.hiScore;
+        UIManager.updateHiScore(GameState.hiScore);
+        UIManager.updateGameStats(GameStats.data);
         UIManager.showGameOver();
     },
-    
+
     restart() {
+        GameStats.recordGameStart();
+        UIManager.updateGameStats(GameStats.data);
         GameState.reset();
         resetObstacles();
+        resetDino();
         UIManager.hideOverlays();
         this.start();
     }

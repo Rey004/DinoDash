@@ -1,5 +1,5 @@
 /* src/styles/main.css */
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;900&family=VT323&display=swap');
 
 /* ── Design tokens (defaults = classic theme) ─────────────────────────────── */
 :root {
@@ -15,9 +15,29 @@
     --select-bg:      rgba(255,255,255,0.95);
     --button-bg:      #1a73e8;
     --button-text:    #ffffff;
+    --logo-bg-color:   #ffffff;
+    --logo-char-color: #191a14;
 
     /* Transition shared across all theme-reactive props */
     --t: 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Dynamic Logo Styling ── */
+.logo-svg {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: inline-block;
+    vertical-align: middle;
+}
+.logo-svg .bg-path {
+    fill: var(--logo-bg-color);
+    transition: fill var(--t);
+}
+.logo-svg .dino-path {
+    fill: var(--logo-char-color);
+    transition: fill var(--t);
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────────── */
@@ -64,6 +84,36 @@ canvas {
     width: 100%; height: 100%;
     z-index: 10;
     pointer-events: none;
+}
+
+/* ── Extension brand (upper left) ────────────────────────────────────────── */
+.newtab-brand {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 12;
+    pointer-events: none;
+    user-select: none;
+}
+.newtab-brand__logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+    display: block;
+}
+.newtab-brand__text {
+    font-family: 'Google Sans', 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-color);
+    opacity: 0.92;
+    transition: color var(--t), opacity 0.2s;
 }
 
 /* ── Score ───────────────────────────────────────────────────────────────── */
@@ -247,15 +297,94 @@ kbd {
     transition: fill var(--t);
 }
 
-/* ── Enhancement toggle ──────────────────────────────────────────────────── */
-.enhancement-toggle-container {
+/* ── Bottom-left controls (stats + enhanced toggle) ──────────────────────── */
+.bottom-left-bar {
     position: absolute;
-    bottom: 20px; left: 20px;
+    bottom: 20px;
+    left: 20px;
+    z-index: 20;
     display: flex;
     align-items: center;
     gap: 10px;
+    pointer-events: none;
+}
+.bottom-left-bar > * {
     pointer-events: auto;
-    z-index: 10;
+}
+
+.bottom-left-bar .customize-button,
+.bottom-left-bar .enhancement-toggle-container {
+    position: static;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    flex-shrink: 0;
+}
+
+#game-stats-panel.overlay-panel {
+    min-width: 280px;
+    top: auto;
+    left: 20px;
+    right: auto;
+    bottom: 72px;
+    z-index: 20;
+    transform: none;
+    transform-origin: bottom left;
+    text-align: left;
+    padding: 24px 28px;
+    opacity: 1;
+    pointer-events: auto;
+}
+#game-stats-panel.overlay-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.92);
+}
+
+.game-stats__title {
+    margin: 0 0 18px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-color);
+    transition: color var(--t);
+}
+.game-stats__grid {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+}
+.game-stats__item {
+    margin: 0;
+}
+.game-stats__label {
+    margin: 0;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-color);
+    opacity: 0.55;
+    transition: color var(--t);
+}
+.game-stats__value {
+    margin: 2px 0 0;
+    font-size: 17px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-color);
+    transition: color var(--t);
+}
+.game-stats__value--time {
+    font-size: 15px;
+    letter-spacing: 0.02em;
+}
+
+/* ── Enhancement toggle ──────────────────────────────────────────────────── */
+.enhancement-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     background: var(--panel-bg);
     padding: 6px 14px;
     border-radius: 20px;
@@ -403,12 +532,16 @@ button:not(.swatch-btn):not(.customize-button):hover {
 }
 button:not(.swatch-btn):not(.customize-button):active { transform: scale(0.97); }
 
-#close-settings { margin-top: 18px; width: 100%; }
+#close-settings,
+#close-stats {
+    margin-top: 18px;
+    width: 100%;
+}
 
 /* ── FPS counter ─────────────────────────────────────────────────────────── */
 #fps-counter {
     position: absolute;
-    top: 20px; left: 20px;
+    top: 58px; left: 20px;
     font-family: monospace;
     font-size: 14px;
     font-weight: bold;

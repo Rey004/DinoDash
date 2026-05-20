@@ -1,4 +1,5 @@
 import { ThemeManager } from '../themes/themeManager.js';
+import { formatPlayTime, formatScore, GameStats } from '../utils/gameStats.js';
 
 export const UIManager = {
     scoreLabel: null,
@@ -17,7 +18,10 @@ export const UIManager = {
         this.scoreContainer = document.getElementById('score-container');
         this.canvas = document.getElementById('game-canvas');
         this.startHint = document.getElementById('start-hint');
-        
+        this.statsPanel = document.getElementById('game-stats-panel');
+        this.statsButton = document.getElementById('stats-button');
+        this.bottomLeftBar = document.getElementById('bottom-left-bar');
+
         // Initial state
         this.canvas.classList.add('blurred');
         this.scoreContainer.classList.add('hidden');
@@ -33,17 +37,35 @@ export const UIManager = {
             });
         }
         
-        document.getElementById('settings-button').addEventListener('click', (e) => {
+        const settingsButton = document.getElementById('settings-button');
+
+        settingsButton.addEventListener('click', (e) => {
             e.stopPropagation();
+            if (this.statsPanel) this.statsPanel.classList.add('hidden');
             this.settingsPanel.classList.toggle('hidden');
         });
-        
+
+        if (this.statsButton && this.statsPanel) {
+            this.statsButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.settingsPanel.classList.add('hidden');
+                this.statsPanel.classList.toggle('hidden');
+            });
+        }
+
         document.addEventListener('click', (e) => {
             if (!this.settingsPanel.classList.contains('hidden')) {
                 const isClickInside = this.settingsPanel.contains(e.target);
-                const isSettingsButton = document.getElementById('settings-button').contains(e.target);
+                const isSettingsButton = settingsButton.contains(e.target);
                 if (!isClickInside && !isSettingsButton) {
                     this.settingsPanel.classList.add('hidden');
+                }
+            }
+            if (this.statsPanel && !this.statsPanel.classList.contains('hidden')) {
+                const isClickInside = this.statsPanel.contains(e.target);
+                const isStatsButton = this.statsButton?.contains(e.target);
+                if (!isClickInside && !isStatsButton) {
+                    this.statsPanel.classList.add('hidden');
                 }
             }
         });
@@ -69,6 +91,15 @@ export const UIManager = {
         document.getElementById('close-settings').addEventListener('click', () => {
             this.settingsPanel.classList.add('hidden');
         });
+
+        const closeStats = document.getElementById('close-stats');
+        if (closeStats && this.statsPanel) {
+            closeStats.addEventListener('click', () => {
+                this.statsPanel.classList.add('hidden');
+            });
+        }
+
+        this.showIdleChrome();
         
         document.getElementById('theme-select').addEventListener('change', (e) => {
             ThemeManager.setTheme(e.target.value);
@@ -105,6 +136,21 @@ export const UIManager = {
     updateHiScore(score) {
         this.hiScoreLabel.textContent = score.toString().padStart(5, '0');
     },
+
+    updateGameStats(stats = GameStats.data) {
+        const set = (id, text) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        };
+        set('stat-hi-score', formatScore(stats.hiScore));
+        set('stat-last-score', formatScore(stats.lastScore));
+        set('stat-games-played', String(stats.gamesPlayed || 0));
+        set('stat-avg-score', formatScore(
+            stats.gamesPlayed ? Math.round(stats.totalDistance / stats.gamesPlayed) : 0
+        ));
+        set('stat-total-distance', formatScore(stats.totalDistance));
+        set('stat-play-time', formatPlayTime(stats.totalPlayTimeMs || 0));
+    },
     
     updateFPS(dt) {
         if (dt > 0) {
@@ -113,21 +159,24 @@ export const UIManager = {
         }
     },
     
+    showIdleChrome() {
+        if (this.bottomLeftBar) this.bottomLeftBar.style.display = 'flex';
+    },
+
     hideOverlays() {
         this.menuPanel.classList.add('hidden');
         this.settingsPanel.classList.add('hidden');
+        if (this.statsPanel) this.statsPanel.classList.add('hidden');
         this.canvas.classList.remove('blurred');
         this.scoreContainer.classList.remove('hidden');
-        const mainToggle = document.querySelector('.enhancement-toggle-container');
-        if (mainToggle) mainToggle.style.display = 'none';
+        if (this.bottomLeftBar) this.bottomLeftBar.style.display = 'none';
     },
-    
+
     showGameOver() {
         this.startHint.innerHTML = 'Press <kbd>SPACE</kbd> to restart the game';
         this.menuPanel.classList.remove('hidden');
         this.canvas.classList.add('blurred');
         this.scoreContainer.classList.add('hidden');
-        const mainToggle = document.querySelector('.enhancement-toggle-container');
-        if (mainToggle) mainToggle.style.display = 'flex';
+        this.showIdleChrome();
     }
 };

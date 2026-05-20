@@ -5,10 +5,11 @@ import { UIManager } from './ui/uiManager.js';
 import { ThemeManager } from './themes/themeManager.js';
 import { setupInput } from './utils/input.js';
 import { initDino } from './entities/dino.js';
+import { GameStats } from './utils/gameStats.js';
 
 function init() {
     // Load saved data
-    chrome.storage?.local.get(['enhancementsEnabled', 'hiScore', 'theme', 'particles', 'audio'], (result) => {
+    chrome.storage?.local.get(['enhancementsEnabled', 'hiScore', 'theme', 'particles', 'audio'], async (result) => {
         if (result.enhancementsEnabled === false) {
             chrome.tabs.getCurrent((tab) => {
                 if (tab) {
@@ -23,10 +24,11 @@ function init() {
         // Show game UI
         document.body.style.opacity = '1';
 
-        if (result.hiScore) {
-            GameState.hiScore = result.hiScore;
-            UIManager.updateHiScore(result.hiScore);
-        }
+        await GameStats.load();
+        GameState.hiScore = Math.max(result.hiScore || 0, GameStats.data.hiScore || 0);
+        GameStats.data.hiScore = GameState.hiScore;
+        UIManager.updateHiScore(GameState.hiScore);
+        UIManager.updateGameStats(GameStats.data);
         if (result.theme) {
             ThemeManager.setTheme(result.theme);
             UIManager.setActiveSwatch(result.theme);
@@ -64,6 +66,14 @@ function init() {
                 fpsCounter.classList.toggle('hidden', !changes.fps.newValue);
                 document.getElementById('toggle-fps').checked = changes.fps.newValue;
             }
+        }
+
+        if (changes.gameStats || changes.hiScore) {
+            GameStats.load().then(() => {
+                GameState.hiScore = GameStats.data.hiScore;
+                UIManager.updateHiScore(GameState.hiScore);
+                UIManager.updateGameStats(GameStats.data);
+            });
         }
     });
 

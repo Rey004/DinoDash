@@ -2,7 +2,12 @@
   "manifest_version": 3,
   "name": "Dino Enhanced",
   "version": "1.0",
-  "description": "An advanced modern reimagining of the classic Chrome Dino offline game.",
+  "description": "An advanced modern reimagining of the chrome tab page and the classic Chrome Dino offline game.",
+  "icons": {
+    "16": "assets/brand/icon-16.png",
+    "48": "assets/brand/icon-48.png",
+    "128": "assets/brand/icon-128.png"
+  },
   "chrome_url_overrides": {
     "newtab": "src/index.html"
   },
@@ -11,6 +16,12 @@
     "tabs"
   ],
   "action": {
+    "default_icon": {
+      "16": "assets/brand/icon-16.png",
+      "24": "assets/brand/icon-24.png",
+      "32": "assets/brand/icon-32.png",
+      "48": "assets/brand/icon-48.png"
+    },
     "default_popup": "popup.html",
     "default_title": "Dino Enhanced"
   },

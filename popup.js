@@ -17,6 +17,8 @@ const THEMES = {
         inputBg:      'rgba(255,255,255,0.98)',
         selectBg:     'rgba(255,255,255,0.95)',
         logoGradient: 'linear-gradient(90deg,#4285f4 25%,#ea4335 25%,#ea4335 50%,#fbbc05 50%,#fbbc05 75%,#34a853 75%)',
+        logoBg:       '#ffffff',
+        logoChar:     '#191a14',
     },
     cyberpunk: {
         name: 'Cyberpunk',
@@ -33,6 +35,8 @@ const THEMES = {
         inputBg:      'rgba(4,4,20,0.90)',
         selectBg:     'rgba(4,4,20,0.90)',
         logoGradient: 'linear-gradient(90deg,#ff00ff,#00ffff)',
+        logoBg:       '#08081c',
+        logoChar:     '#ffffff',
     },
     nature: {
         name: 'Nature',
@@ -49,6 +53,8 @@ const THEMES = {
         inputBg:      'rgba(255,255,255,0.92)',
         selectBg:     'rgba(240,255,245,0.95)',
         logoGradient: 'linear-gradient(90deg,#2E8B57,#56ab2f)',
+        logoBg:       '#f0fff5',
+        logoChar:     '#2E4A2E',
     },
     space: {
         name: 'Space',
@@ -65,6 +71,8 @@ const THEMES = {
         inputBg:      'rgba(2,2,16,0.90)',
         selectBg:     'rgba(4,4,22,0.90)',
         logoGradient: 'linear-gradient(90deg,#a78bfa,#60a5fa)',
+        logoBg:       '#040416',
+        logoChar:     '#ffffff',
     },
     dark: {
         name: 'Dark',
@@ -81,6 +89,8 @@ const THEMES = {
         inputBg:      'rgba(10,4,4,0.95)',
         selectBg:     'rgba(18,8,8,0.95)',
         logoGradient: 'linear-gradient(90deg,#8b1a1a,#c0392b,#e0d4d4)',
+        logoBg:       '#0f0606',
+        logoChar:     '#ffffff',
     },
 };
 
@@ -102,6 +112,8 @@ function applyTheme(key) {
     r.style.setProperty('--input-bg',      t.inputBg);
     r.style.setProperty('--select-bg',     t.selectBg);
     r.style.setProperty('--logo-gradient', t.logoGradient);
+    r.style.setProperty('--logo-bg-color',   t.logoBg);
+    r.style.setProperty('--logo-char-color', t.logoChar);
 
     document.body.setAttribute('data-theme', key);
 
@@ -138,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fpsTog       = document.getElementById('popup-fps');
     const hiScoreEl    = document.getElementById('popup-hi-score');
     const openTabBtn   = document.getElementById('open-tab-btn');
-    const resetBtn     = document.getElementById('reset-score-btn');
+
 
     // ── Load all saved settings ───────────────────────────────────────────
     chrome.storage.local.get(
@@ -211,15 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.create({ url: 'chrome://newtab/' });
     });
 
-    // ── Reset hi-score ───────────────────────────────────────────────────
-    resetBtn.addEventListener('click', () => {
-        chrome.storage.local.set({ hiScore: 0 }, () => {
-            hiScoreEl.textContent = '00000';
-            // Flash feedback
-            resetBtn.textContent = '✓ Reset!';
-            setTimeout(() => { resetBtn.innerHTML = '<span>↺</span> Reset Hi-Score'; }, 1200);
-        });
-    });
+
 
     // ── Live sync: react to changes made in the new tab ──────────────────
     chrome.storage.onChanged.addListener((changes, namespace) => {

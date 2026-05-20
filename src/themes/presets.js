@@ -20,6 +20,8 @@ export const themes = {
         buttonBg:         '#1a73e8',
         buttonText:       '#ffffff',
         selectBg:         'rgba(255,255,255,0.95)',
+        logoBg:           '#ffffff',
+        logoChar:         '#191a14',
     },
     cyberpunk: {
         // — canvas —
@@ -42,6 +44,8 @@ export const themes = {
         buttonBg:         '#00ffff',
         buttonText:       '#0a0a1a',
         selectBg:         'rgba(4,4,20,0.90)',
+        logoBg:           '#08081c',
+        logoChar:         '#ffffff',
     },
     nature: {
         // — canvas —
@@ -64,6 +68,8 @@ export const themes = {
         buttonBg:         '#2E8B57',
         buttonText:       '#ffffff',
         selectBg:         'rgba(240,255,245,0.95)',
+        logoBg:           '#f0fff5',
+        logoChar:         '#2E4A2E',
     },
     space: {
         // — canvas —
@@ -86,6 +92,8 @@ export const themes = {
         buttonBg:         '#a78bfa',
         buttonText:       '#04041a',
         selectBg:         'rgba(4,4,22,0.90)',
+        logoBg:           '#040416',
+        logoChar:         '#ffffff',
     },
     dark: {
         // — canvas —
@@ -108,6 +116,8 @@ export const themes = {
         buttonBg:         '#8b1a1a',
         buttonText:       '#f0e4e4',
         selectBg:         'rgba(18,8,8,0.95)',
+        logoBg:           '#0f0606',
+        logoChar:         '#ffffff',
     }
 };
 

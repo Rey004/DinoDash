@@ -6,6 +6,7 @@ import { checkAABB } from '../engine/physics.js';
 import { randomInt } from '../utils/math.js';
 import { playSound } from '../audio/audioManager.js';
 import { emitExplosion } from '../rendering/particles.js';
+import { AssetLoader } from '../utils/assetLoader.js';
 
 let obstacles = [];
 let nextObstacleDist = 0;
@@ -36,13 +37,13 @@ export function updateObstacles(dt) {
 
 function spawnObstacle() {
     const types = [
-        { width: 17, height: 35, yOffset: 0 }, // Small cactus
-        { width: 34, height: 35, yOffset: 0 }, // Two small
-        { width: 25, height: 50, yOffset: 0 }, // Large cactus
-        { width: 50, height: 50, yOffset: 0 }, // Two large
-        { width: 46, height: 40, yOffset: 25 }, // Pterodactyl low
-        { width: 46, height: 40, yOffset: 50 }, // Pterodactyl mid
-        { width: 46, height: 40, yOffset: 75 }, // Pterodactyl high
+        { width: 17, height: 35, yOffset: 0, spriteName: 'small-obstacle' }, // Small cactus
+        { width: 34, height: 35, yOffset: 0, spriteName: 'small-obstacle' }, // Two small
+        { width: 25, height: 50, yOffset: 0, spriteName: 'large-obstacle' }, // Large cactus
+        { width: 50, height: 50, yOffset: 0, spriteName: 'large-obstacle' }, // Two large
+        { width: 46, height: 40, yOffset: 25, spriteName: null }, // Pterodactyl low
+        { width: 46, height: 40, yOffset: 50, spriteName: null }, // Pterodactyl mid
+        { width: 46, height: 40, yOffset: 75, spriteName: null }, // Pterodactyl high
     ];
     
     let allowedTypes = types.slice(0, 4); // Only ground early on
@@ -56,7 +57,8 @@ function spawnObstacle() {
         x: GameState.canvasWidth,
         y: GameState.GROUND_Y - type.height - type.yOffset,
         width: type.width,
-        height: type.height
+        height: type.height,
+        spriteName: type.spriteName
     });
 }
 
@@ -89,6 +91,7 @@ export function checkCollisions() {
 export function drawObstacles() {
     const ctx = Renderer.ctx;
     const theme = ThemeManager.current;
+    const themeName = ThemeManager.activeThemeName;
     
     ctx.fillStyle = theme.obstacleColor;
     if (theme.hasGlow) {
@@ -97,7 +100,22 @@ export function drawObstacles() {
     }
     
     for (let obs of obstacles) {
-        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        let sprite = null;
+        if (obs.spriteName) {
+            sprite = AssetLoader.getSprite(themeName, obs.spriteName);
+        }
+        
+        if (sprite) {
+            const scale = 2.0;
+            const drawWidth = obs.width * scale;
+            const drawHeight = obs.height * scale;
+            const offsetX = (drawWidth - obs.width) / 2;
+            const offsetY = drawHeight - obs.height;
+            
+            ctx.drawImage(sprite, obs.x - offsetX, obs.y - offsetY, drawWidth, drawHeight);
+        } else {
+            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        }
     }
     
     ctx.shadowBlur = 0;

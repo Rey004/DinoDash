@@ -29,9 +29,10 @@ function init() {
         }
         if (result.theme) {
             ThemeManager.setTheme(result.theme);
-            document.getElementById('theme-select').value = result.theme;
+            UIManager.setActiveSwatch(result.theme);
         } else {
             ThemeManager.setTheme('classic');
+            UIManager.setActiveSwatch('classic');
         }
         if (result.particles !== undefined) {
             document.getElementById('toggle-particles').checked = result.particles;
@@ -43,13 +44,25 @@ function init() {
 
     // Listen for changes from the popup
     chrome.storage?.onChanged.addListener((changes, namespace) => {
-        if (namespace === 'local' && changes.enhancementsEnabled) {
-            if (changes.enhancementsEnabled.newValue === false) {
-                chrome.tabs.getCurrent((tab) => {
-                    if (tab) {
-                        chrome.tabs.update(tab.id, { url: 'chrome://new-tab-page/' });
-                    }
-                });
+        if (namespace !== 'local') return;
+
+        if (changes.enhancementsEnabled?.newValue === false) {
+            chrome.tabs.getCurrent((tab) => {
+                if (tab) chrome.tabs.update(tab.id, { url: 'chrome://new-tab-page/' });
+            });
+        }
+
+        if (changes.theme) {
+            const key = changes.theme.newValue;
+            ThemeManager.setTheme(key);
+            UIManager.setActiveSwatch(key);
+        }
+
+        if (changes.fps) {
+            const fpsCounter = document.getElementById('fps-counter');
+            if (fpsCounter) {
+                fpsCounter.classList.toggle('hidden', !changes.fps.newValue);
+                document.getElementById('toggle-fps').checked = changes.fps.newValue;
             }
         }
     });

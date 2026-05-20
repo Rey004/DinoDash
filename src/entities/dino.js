@@ -3,6 +3,7 @@ import { Renderer } from '../rendering/renderer.js';
 import { emitDust } from '../rendering/particles.js';
 import { ThemeManager } from '../themes/themeManager.js';
 import { playSound } from '../audio/audioManager.js';
+import { AssetLoader } from '../utils/assetLoader.js';
 
 export const dino = {
     x: 50,
@@ -36,7 +37,7 @@ export function duckDino() {
         dino.y = GameState.GROUND_Y - dino.height;
     } else if (dino.isJumping) {
         // Fast fall
-        dino.vy += GameState.GRAVITY * 3;
+        dino.vy += GameState.GRAVITY * 1;
     }
 }
 
@@ -67,8 +68,19 @@ export function updateDino(dt) {
 export function drawDino() {
     const ctx = Renderer.ctx;
     const theme = ThemeManager.current;
+    const themeName = ThemeManager.activeThemeName;
     
-    ctx.fillStyle = theme.dinoColor;
+    let spriteAsset = 'idle';
+    if (GameState.currentPhase === 'gameover') {
+        spriteAsset = 'dead';
+    } else if (dino.isDucking) {
+        spriteAsset = Math.floor(performance.now() / 120) % 2 === 0 ? 'duck-1' : 'duck-2';
+    } else if (!dino.isJumping && GameState.currentPhase === 'playing') {
+        // Alternate running frames based on time
+        spriteAsset = Math.floor(performance.now() / 120) % 2 === 0 ? 'run-1' : 'run-2';
+    }
+    
+    const sprite = AssetLoader.getSprite(themeName, spriteAsset);
     
     if (theme.hasGlow) {
         ctx.shadowBlur = 10;
@@ -77,7 +89,20 @@ export function drawDino() {
         ctx.shadowBlur = 0;
     }
     
-    ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
+    if (sprite) {
+        // Draw the sprite larger than the hitbox to make it pop,
+        // but keep the bottom aligned to the ground so it doesn't float.
+        const scale = 3.0;
+        const drawWidth = dino.width * scale;
+        const drawHeight = dino.height * scale;
+        const offsetX = (drawWidth - dino.width) / 2;
+        const offsetY = drawHeight - dino.height;
+        
+        ctx.drawImage(sprite, dino.x - offsetX, dino.y - offsetY, drawWidth, drawHeight);
+    } else {
+        ctx.fillStyle = theme.dinoColor;
+        ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
+    }
     
     ctx.shadowBlur = 0; // reset
 }

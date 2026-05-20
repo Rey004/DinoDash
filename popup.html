@@ -3,80 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dino Enhanced Settings</title>
+    <title>Dino Enhanced</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* ── Design tokens (overwritten by JS on load) ── */
+        :root {
+            --bg:            #f7f7f7;
+            --surface:       rgba(255,255,255,0.88);
+            --border:        rgba(0,0,0,0.10);
+            --text:          #535353;
+            --text-muted:    rgba(83,83,83,0.6);
+            --accent:        #1a73e8;
+            --accent-soft:   rgba(26,115,232,0.12);
+            --glow:          none;
+            --btn-bg:        #1a73e8;
+            --btn-text:      #ffffff;
+            --input-bg:      rgba(255,255,255,0.98);
+            --select-bg:     rgba(255,255,255,0.95);
+            --logo-gradient: linear-gradient(90deg,#4285f4 25%,#ea4335 25%,#ea4335 50%,#fbbc05 50%,#fbbc05 75%,#34a853 75%);
+            --t: 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            width: 250px;
-            padding: 15px;
-            background-color: #f7f7f7;
-            color: #333;
-            margin: 0;
+            font-family: 'Inter', sans-serif;
+            width: 300px;
+            background: var(--bg);
+            color: var(--text);
+            transition: background var(--t), color var(--t);
+            overflow: hidden;
         }
-        h2 {
-            margin-top: 0;
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 18px 14px;
+            border-bottom: 1px solid var(--border);
+            transition: border-color var(--t);
+        }
+
+        .dino-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background var(--t), border-color var(--t);
+        }
+        .dino-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--accent);
+            transition: fill var(--t);
+        }
+
+        .header-text h1 {
+            font-family: 'Google Sans', 'Inter', sans-serif;
             font-size: 16px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 8px;
+            font-weight: 700;
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background var(--t);
         }
-        .toggle-container {
+
+        .header-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 1px;
+            transition: color var(--t);
+        }
+
+        /* ── Score badge ── */
+        .score-bar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 18px;
+            background: var(--accent-soft);
+            border-bottom: 1px solid var(--border);
+            transition: background var(--t), border-color var(--t);
+        }
+
+        .score-chip {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 6px 10px;
+            text-align: center;
+            transition: background var(--t), border-color var(--t), box-shadow var(--t);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .score-chip .label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            transition: color var(--t);
+        }
+
+        .score-chip .value {
+            font-size: 18px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent);
+            margin-top: 1px;
+            transition: color var(--t);
+        }
+
+        /* ── Sections ── */
+        .section {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            transition: border-color var(--t);
+        }
+
+        .section-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            transition: color var(--t);
+        }
+
+        /* ── Rows ── */
+        .row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
+            padding: 5px 0;
+        }
+
+        .row + .row { margin-top: 2px; }
+
+        .row-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
             font-weight: 500;
         }
-        /* Switch CSS */
+
+        .row-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .row-icon svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent);
+            opacity: 0.85;
+            transition: color var(--t);
+        }
+
+        /* ── Select ── */
+        select {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--select-bg);
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+            transition: background var(--t), border-color var(--t), color var(--t), box-shadow var(--t);
+        }
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-soft), var(--glow);
+        }
+
+        /* ── Toggle switch ── */
         .switch {
             position: relative;
             display: inline-block;
-            width: 40px;
+            width: 36px;
             height: 20px;
+            flex-shrink: 0;
         }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
+            inset: 0;
+            background: rgba(0,0,0,0.15);
             border-radius: 20px;
+            transition: background 0.3s;
+            border: 1px solid var(--border);
         }
-        .slider:before {
+        .slider::before {
+            content: '';
             position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
+            width: 14px; height: 14px;
+            left: 2px; bottom: 2px;
+            background: white;
             border-radius: 50%;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        input:checked + .slider {
-            background-color: #2196F3;
+        input:checked + .slider { background: var(--accent); border-color: var(--accent); }
+        input:checked + .slider::before { transform: translateX(16px); }
+
+        /* ── Primary button ── */
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            width: 100%;
+            padding: 11px;
+            margin: 14px 18px 0;
+            width: calc(100% - 36px);
+            border: none;
+            border-radius: 12px;
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--t), color var(--t), transform 0.15s, box-shadow var(--t);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15), var(--glow);
         }
-        input:checked + .slider:before {
-            transform: translateX(20px);
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.2), var(--glow);
+        }
+        .btn-primary:active { transform: scale(0.97); }
+
+        /* ── Danger button ── */
+        .btn-danger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            width: calc(100% - 36px);
+            margin: 8px 18px 0;
+            padding: 9px;
+            border: 1px solid rgba(220,50,50,0.3);
+            border-radius: 12px;
+            background: rgba(220,50,50,0.08);
+            color: #c0392b;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+        }
+        .btn-danger:hover { background: rgba(220,50,50,0.15); border-color: rgba(220,50,50,0.5); }
+        .btn-danger:active { transform: scale(0.97); }
+
+        /* ── Footer ── */
+        .footer {
+            padding: 10px 18px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* ── Version badge ── */
+        .version {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            padding: 8px 18px 12px;
+            transition: color var(--t);
+        }
+
+        /* Enhanced mode off state */
+        body.disabled .score-bar,
+        body.disabled .section:not(.always-on) {
+            opacity: 0.4;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <h2>Dino Enhanced</h2>
-    <div class="toggle-container">
-        <span>Enhancements</span>
-        <label class="switch">
-            <input type="checkbox" id="enhancement-toggle" checked>
-            <span class="slider"></span>
-        </label>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="dino-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <!-- Body -->
+                <rect x="18" y="28" width="24" height="18" rx="4"/>
+                <!-- Neck -->
+                <rect x="34" y="14" width="10" height="18" rx="4"/>
+                <!-- Head -->
+                <rect x="36" y="8" width="16" height="12" rx="4"/>
+                <!-- Eye -->
+                <circle cx="50" cy="13" r="2" fill="var(--input-bg)"/>
+                <!-- Tail -->
+                <path d="M18 42 Q8 46 6 54" stroke-width="5" stroke-linecap="round" stroke="currentColor" fill="none"/>
+                <!-- Front leg -->
+                <rect x="26" y="44" width="6" height="12" rx="3"/>
+                <!-- Back leg -->
+                <rect x="36" y="44" width="6" height="12" rx="3"/>
+            </svg>
+        </div>
+        <div class="header-text">
+            <h1>Dino Enhanced</h1>
+            <p>New Tab Experience</p>
+        </div>
     </div>
+
+    <!-- Score bar -->
+    <div class="score-bar">
+        <div class="score-chip">
+            <div class="label">Hi Score</div>
+            <div class="value" id="popup-hi-score">—</div>
+        </div>
+        <div class="score-chip">
+            <div class="label">Theme</div>
+            <div class="value" id="popup-theme-name" style="font-size:13px;margin-top:4px;">—</div>
+        </div>
+    </div>
+
+    <!-- General section -->
+    <div class="section always-on">
+        <div class="section-title">General</div>
+
+        <div class="row">
+            <div class="row-label">
+                <span class="row-icon">
+                    <!-- Power / bolt -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z" fill="currentColor" stroke="none"/>
+                    </svg>
+                </span>
+                Enhanced Mode
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="enhancement-toggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Appearance section -->
+    <div class="section" id="section-appearance">
+        <div class="section-title">Appearance</div>
+
+        <div class="row">
+            <div class="row-label">
+                <span class="row-icon">
+                    <!-- Palette -->
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10 1.1 0 2-.9 2-2v-.5c0-.55.45-1 1-1h2c2.76 0 5-2.24 5-5C22 6.48 17.52 2 12 2zm-5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                    </svg>
+                </span>
+                Theme
+            </div>
+            <select id="popup-theme-select">
+                <option value="classic">Classic</option>
+                <option value="cyberpunk">Cyberpunk</option>
+                <option value="nature">Nature</option>
+                <option value="space">Space</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Game section -->
+    <div class="section" id="section-game">
+        <div class="section-title">Game</div>
+
+        <div class="row">
+            <div class="row-label">
+                <span class="row-icon">
+                    <!-- Sparkles / particles -->
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
+                        <path d="M5 15l.75 2.25L8 18l-2.25.75L5 21l-.75-2.25L2 18l2.25-.75L5 15z"/>
+                        <path d="M19 14l.75 2.25L22 17l-2.25.75L19 20l-.75-2.25L16 17l2.25-.75L19 14z"/>
+                    </svg>
+                </span>
+                Particles
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="popup-particles" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                <span class="row-icon">
+                    <!-- Speaker / sound -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                </span>
+                Sound
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="popup-audio" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                <span class="row-icon">
+                    <!-- Speedometer / FPS -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M3 12a9 9 0 1 0 18 0"/>
+                        <path d="M12 12l2.5-4.5" stroke-width="2.5"/>
+                        <circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none"/>
+                        <path d="M7 16.5l1-1.5" stroke-width="1.5"/>
+                        <path d="M17 16.5l-1-1.5" stroke-width="1.5"/>
+                    </svg>
+                </span>
+                Show FPS
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="popup-fps">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Footer buttons -->
+    <div class="footer">
+        <button class="btn-primary" id="open-tab-btn">
+            <span>🦖</span> Open New Tab
+        </button>
+        <button class="btn-danger" id="reset-score-btn">
+            <span>↺</span> Reset Hi-Score
+        </button>
+    </div>
+
+    <div class="version">Dino Enhanced v1.0</div>
+
     <script src="popup.js"></script>
 </body>
 </html>

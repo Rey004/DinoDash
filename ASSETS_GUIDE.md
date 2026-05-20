@@ -28,9 +28,19 @@ Whether you use individual files or a single spritesheet, each theme will logica
 
 ### 3. Environment
 - `ground.webp` (A seamlessly tileable horizontal ground texture)
+- `bg-layer-1.webp` (Optional: Far background parallax layer, e.g., distant mountains or city skyline)
+- `bg-layer-2.webp` (Optional: Mid-background parallax layer, e.g., closer trees or buildings)
 - `cloud.webp` (Background decoration)
 - `moon-sun.webp` (Background decoration for day/night phases)
 - `star.webp` (Optional, for night themes)
+
+### 4. Effects & Polish
+- `particle.webp` (Optional: A small custom sprite for theme-specific particles like leaves, sparks, or snow crystals).
+- `speed-lines.webp` (Optional: An overlay that fades in when the game speed gets very high, creating an intense sense of motion).
+
+### 5. Audio (Optional)
+- `bgm.ogg` (Optional: A seamless looping background music track tailored to the theme).
+- `jump.ogg`, `hit.ogg`, `score.ogg` (Custom sound effects).
 
 ---
 

@@ -93,6 +93,11 @@ export const UIManager = {
         });
     },
     
+    setActiveSwatch(themeKey) {
+        const sel = document.getElementById('theme-select');
+        if (sel) sel.value = themeKey;
+    },
+
     updateScore(score) {
         this.scoreLabel.textContent = score.toString().padStart(5, '0');
     },

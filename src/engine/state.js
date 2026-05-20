@@ -11,7 +11,7 @@ export const GameState = {
     
     // Config
     GRAVITY: 0.6,
-    JUMP_VELOCITY: -10,
+    JUMP_VELOCITY: -12.5,
     MIN_JUMP_HEIGHT: 35,
     MAX_SPEED: 13,
     SPEED_INCREMENT: 0.001,

@@ -9,6 +9,7 @@ import { GameStats } from './utils/gameStats.js';
 import { DailyQuests } from './utils/dailyQuests.js';
 import { initDailyQuestsUI } from './ui/dailyQuestsUI.js';
 import { WidgetManager } from './ui/widgetManager.js';
+import { initFavouriteLinksUI } from './ui/favouriteLinksUI.js';
 
 const DEFAULT_THEME = 'dark';
 const DEFAULT_PROFILE_NAME = 'User';
@@ -158,6 +159,7 @@ async function init() {
         const ready = await applySavedSettings(result);
         if (!ready) return;
 
+        await initFavouriteLinksUI();
         await DailyQuests.load();
         initDailyQuestsUI();
 

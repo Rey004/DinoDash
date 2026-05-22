@@ -1,4 +1,4 @@
-/* â”€â”€ Select & generic inputs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Select & generic inputs ──────────────────────────────────────────────── */
 select {
     padding: 7px 12px;
     font-family: inherit;
@@ -27,8 +27,8 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-/* â”€â”€ Close / action button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-button:not(.swatch-btn):not(.customize-button):not(.daily-quests__add-btn):not(.daily-quests__remove):not(.daily-quests__collapse):not(.widget-manage__trigger):not(.widget-tag__action):not(.theme-card) {
+/* ── Close / action button ────────────────────────────────────────────────── */
+button:not(.swatch-btn):not(.customize-button):not(.daily-quests__add-btn):not(.daily-quests__remove):not(.daily-quests__collapse):not(.widget-manage__trigger):not(.widget-tag__action):not(.theme-card):not(.favourite-links__icon-btn):not(.favourite-links__folder-action):not(.favourite-links__link-remove):not(.favourite-folder__trigger):not(.favourite-tree-action-btn):not(.favourite-confirm__btn):not(.favourite-links__action-btn) {
     padding: 9px 14px;
     font-family: inherit;
     font-size: 14px;
@@ -41,10 +41,10 @@ button:not(.swatch-btn):not(.customize-button):not(.daily-quests__add-btn):not(.
     transition: background var(--t), color var(--t), transform 0.12s, box-shadow var(--t);
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-button:not(.swatch-btn):not(.customize-button):not(.daily-quests__add-btn):not(.daily-quests__remove):not(.daily-quests__collapse):not(.widget-manage__trigger):not(.widget-tag__action):not(.theme-card):hover {
+button:not(.swatch-btn):not(.customize-button):not(.daily-quests__add-btn):not(.daily-quests__remove):not(.daily-quests__collapse):not(.widget-manage__trigger):not(.widget-tag__action):not(.theme-card):not(.favourite-links__icon-btn):not(.favourite-links__folder-action):not(.favourite-links__link-remove):not(.favourite-folder__trigger):not(.favourite-tree-action-btn):not(.favourite-confirm__btn):not(.favourite-links__action-btn):hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
-button:not(.swatch-btn):not(.customize-button):not(.daily-quests__add-btn):not(.daily-quests__remove):not(.daily-quests__collapse):not(.widget-manage__trigger):not(.widget-tag__action):not(.theme-card):active { transform: scale(0.97); }
+button:not(.swatch-btn):not(.customize-button):not(.daily-quests__add-btn):not(.daily-quests__remove):not(.daily-quests__collapse):not(.widget-manage__trigger):not(.widget-tag__action):not(.theme-card):not(.favourite-links__icon-btn):not(.favourite-links__folder-action):not(.favourite-links__link-remove):not(.favourite-folder__trigger):not(.favourite-tree-action-btn):not(.favourite-confirm__btn):not(.favourite-links__action-btn):active { transform: scale(0.97); }
 
 #settings-panel button:not(.widget-manage__trigger):not(.widget-tag__action):hover,
 #game-stats-panel button:hover {

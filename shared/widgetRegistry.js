@@ -27,6 +27,15 @@ export const WIDGET_REGISTRY = [
         elementIds: ['enhancement-toggle-widget'],
         hideDuringPlay: true,
     },
+    {
+        id: 'favouriteLinks',
+        label: 'Favourite Links',
+        description: 'Foldered bookmark hub with favicons and drag-and-drop organization',
+        defaultEnabled: true,
+        elementIds: ['favourite-links-widget'],
+        closeElementIds: ['favourite-links-panel'],
+        hideDuringPlay: true,
+    },
 ];
 
 export function getWidgetDef(id) {

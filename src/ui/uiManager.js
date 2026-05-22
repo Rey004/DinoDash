@@ -28,6 +28,8 @@ export const UIManager = {
         this.startHint = document.getElementById('start-hint');
         this.statsPanel = document.getElementById('game-stats-panel');
         this.statsButton = document.getElementById('stats-button');
+        this.favouriteLinksPanel = document.getElementById('favourite-links-panel');
+        this.favouriteLinksButton = document.getElementById('favourite-links-button');
         this.bottomLeftBar = document.getElementById('bottom-left-bar');
 
         // Initial state
@@ -60,6 +62,8 @@ export const UIManager = {
             themeButton?.setAttribute('aria-expanded', 'false');
             this.widgetPanel.classList.add('hidden');
             widgetButton?.setAttribute('aria-expanded', 'false');
+            this.favouriteLinksPanel?.classList.add('hidden');
+            this.favouriteLinksButton?.setAttribute('aria-expanded', 'false');
             this.settingsPanel.classList.toggle('hidden');
             settingsButton.setAttribute('aria-expanded', String(!this.settingsPanel.classList.contains('hidden')));
         });
@@ -74,6 +78,8 @@ export const UIManager = {
             settingsButton.setAttribute('aria-expanded', 'false');
             this.widgetPanel.classList.add('hidden');
             widgetButton?.setAttribute('aria-expanded', 'false');
+            this.favouriteLinksPanel?.classList.add('hidden');
+            this.favouriteLinksButton?.setAttribute('aria-expanded', 'false');
             this.themePanel.classList.toggle('hidden');
             themeButton.setAttribute('aria-expanded', String(!this.themePanel.classList.contains('hidden')));
         });
@@ -88,9 +94,31 @@ export const UIManager = {
             settingsButton.setAttribute('aria-expanded', 'false');
             this.themePanel.classList.add('hidden');
             themeButton.setAttribute('aria-expanded', 'false');
+            this.favouriteLinksPanel?.classList.add('hidden');
+            this.favouriteLinksButton?.setAttribute('aria-expanded', 'false');
             this.widgetPanel.classList.toggle('hidden');
             widgetButton.setAttribute('aria-expanded', String(!this.widgetPanel.classList.contains('hidden')));
         });
+
+        if (this.favouriteLinksButton && this.favouriteLinksPanel) {
+            this.favouriteLinksButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!WidgetManager.isEnabled('favouriteLinks')) return;
+                if (this.statsPanel) {
+                    this.statsPanel.classList.add('hidden');
+                    this.statsButton?.setAttribute('aria-expanded', 'false');
+                }
+                this.settingsPanel.classList.add('hidden');
+                this.themePanel.classList.add('hidden');
+                this.widgetPanel.classList.add('hidden');
+                settingsButton.setAttribute('aria-expanded', 'false');
+                themeButton?.setAttribute('aria-expanded', 'false');
+                widgetButton?.setAttribute('aria-expanded', 'false');
+                const opening = this.favouriteLinksPanel.classList.contains('hidden');
+                this.favouriteLinksPanel.classList.toggle('hidden');
+                this.favouriteLinksButton.setAttribute('aria-expanded', String(opening));
+            });
+        }
 
         if (this.statsButton && this.statsPanel) {
             this.statsButton.addEventListener('click', (e) => {
@@ -102,6 +130,8 @@ export const UIManager = {
                 themeButton?.setAttribute('aria-expanded', 'false');
                 this.widgetPanel.classList.add('hidden');
                 widgetButton?.setAttribute('aria-expanded', 'false');
+                this.favouriteLinksPanel?.classList.add('hidden');
+                this.favouriteLinksButton?.setAttribute('aria-expanded', 'false');
                 const opening = this.statsPanel.classList.contains('hidden');
                 this.statsPanel.classList.toggle('hidden');
                 this.statsButton.setAttribute('aria-expanded', String(opening));
@@ -141,6 +171,19 @@ export const UIManager = {
                 if (!isClickInside) {
                     this.statsPanel.classList.add('hidden');
                     this.statsButton?.setAttribute('aria-expanded', 'false');
+                }
+            }
+            if (this.favouriteLinksPanel && !this.favouriteLinksPanel.classList.contains('hidden')) {
+                const favouriteLinksWidget = document.getElementById('favourite-links-widget');
+                // Use composedPath() so the check stays accurate even after render()
+                // rebuilds the panel's inner DOM (contains() would return false on
+                // detached nodes, incorrectly treating the click as "outside").
+                const path = e.composedPath();
+                const isClickInside =
+                    path.includes(this.favouriteLinksPanel) || path.includes(favouriteLinksWidget);
+                if (!isClickInside) {
+                    this.favouriteLinksPanel.classList.add('hidden');
+                    this.favouriteLinksButton?.setAttribute('aria-expanded', 'false');
                 }
             }
         });
@@ -186,7 +229,7 @@ export const UIManager = {
             });
         });
 
-        document.querySelectorAll('.floating-tool-button, #stats-button').forEach((button) => {
+        document.querySelectorAll('.floating-tool-button, #stats-button, #favourite-links-button').forEach((button) => {
             button.addEventListener('keydown', (e) => {
                 if (e.key !== 'Enter' && e.key !== ' ') return;
                 e.preventDefault();
@@ -374,6 +417,10 @@ export const UIManager = {
         if (this.statsPanel) {
             this.statsPanel.classList.add('hidden');
             this.statsButton?.setAttribute('aria-expanded', 'false');
+        }
+        if (this.favouriteLinksPanel) {
+            this.favouriteLinksPanel.classList.add('hidden');
+            this.favouriteLinksButton?.setAttribute('aria-expanded', 'false');
         }
         this.canvas.classList.remove('blurred');
         this.scoreContainer.classList.remove('hidden');

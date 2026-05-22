@@ -8,6 +8,7 @@
 @import './components/overlays.css';
 @import './components/native-ui.css';
 @import './components/controls.css';
+@import './components/favourite-links.css';
 @import './components/settings-themes.css';
 @import './components/widget-manager.css';
 @import './base/forms-buttons.css';

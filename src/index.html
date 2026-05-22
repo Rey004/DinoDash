@@ -85,6 +85,50 @@
             </div>
             
             <div id="bottom-left-bar" class="bottom-left-bar">
+                <div id="favourite-links-widget" class="favourite-links-widget" data-widget="favouriteLinks">
+                    <div id="favourite-links-button" data-tooltip="Favourite Links" data-tooltip-position="top-start" class="customize-button favourite-links-button" tabindex="0" role="button" aria-expanded="false" aria-controls="favourite-links-panel">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2h9A2.5 2.5 0 0 1 19 4.5v16.1a1 1 0 0 1-1.55.83L12 17.79l-5.45 3.64A1 1 0 0 1 5 20.6V4.5Z"/>
+                        </svg>
+                    </div>
+                    <section id="favourite-links-panel" class="favourite-links-panel overlay-panel hidden" aria-label="Favourite Links">
+                        <header class="favourite-links__header">
+                            <div>
+                                <h2 class="favourite-links__title">Favourite Links</h2>
+                                <p class="favourite-links__subtitle">Fast folders for your daily web.</p>
+                            </div>
+                            <button type="button" id="favourite-links-close" class="favourite-links__icon-btn" data-tooltip="Close links" aria-label="Close links">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </header>
+                        <div class="favourite-links__forms">
+                            <form id="favourite-folder-form" class="favourite-links__form">
+                                <input id="favourite-folder-name" type="text" maxlength="28" placeholder="New folder" autocomplete="off" aria-label="New folder name">
+                                <button type="submit" class="favourite-links__action-btn" data-tooltip="Add folder" aria-label="Add folder">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                            </form>
+                            <form id="favourite-link-form" class="favourite-links__form favourite-links__form--link">
+                                <input id="favourite-link-title" type="text" maxlength="40" placeholder="Name" autocomplete="off" aria-label="Link name">
+                                <input id="favourite-link-url" type="text" inputmode="url" placeholder="https://example.com" autocomplete="off" aria-label="Link URL">
+                                <select id="favourite-link-folder" aria-label="Link folder"></select>
+                                <button type="submit" class="favourite-links__action-btn" data-tooltip="Add link" aria-label="Add link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                        <div id="favourite-links-folders" class="favourite-links__folders" aria-live="polite"></div>
+                    </section>
+                </div>
                 <div id="statistics-widget" class="statistics-widget" data-widget="gameStats">
                     <div id="stats-button" data-tooltip="Game statistics" data-tooltip-position="top-start" class="customize-button stats-button" tabindex="0" role="button" aria-expanded="false" aria-controls="game-stats-panel">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

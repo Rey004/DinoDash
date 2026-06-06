@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "DinoDash",
+  "name": "DinoDash - Interactive New Tab & Enhanced Dino Game",
   "version": "1.0",
-  "description": "An advanced modern reimagining of the chrome tab page and the classic Chrome Dino offline game.",
+  "description": "Transform your new tab with productivity widgets, smart history, favorite links, themes, and an enhanced Dino game.",
   "icons": {
     "16": "assets/brand/icon-16.png",
     "32": "assets/brand/icon-32.png",
@@ -14,7 +14,9 @@
   },
   "permissions": [
     "storage",
-    "tabs",
+    "tabs"
+  ],
+  "optional_permissions": [
     "history"
   ],
   "action": {

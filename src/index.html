@@ -14,12 +14,14 @@
 
         <!-- UI Overlay -->
         <div id="ui-layer">
-            <div id="newtab-brand" class="newtab-brand" aria-label="DinoDash">
+            <a id="newtab-brand" class="newtab-brand" aria-label="DinoDash"
+               href="https://use-dino-dash.vercel.app/" target="_blank" rel="noopener noreferrer"
+               data-tooltip="Visit DinoDash site" data-tooltip-position="top-start">
                 <img class="newtab-brand__logo brand-logo"
                     src="../assets/brand/logo-dark.webp"
                     alt="DinoDash" width="32" height="32" decoding="async">
                 <span class="newtab-brand__text">DinoDash</span>
-            </div>
+            </a>
 
             <div id="score-container">
                 <span id="score-label">HI <span id="hi-score">00000</span></span>
@@ -230,6 +232,16 @@
                     <label>System Messages</label>
                     <input type="checkbox" id="toggle-messages" checked>
                 </div>
+                <a class="settings-link" id="settings-docs-link"
+                   href="https://use-dino-dash.vercel.app/docs"
+                   target="_blank" rel="noopener noreferrer"
+                   data-tooltip="Read the DinoDash docs" data-tooltip-position="top">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    <span>Documentation</span>
+                </a>
                 <button id="close-settings">Close</button>
             </div>
 

@@ -104,39 +104,11 @@ A unified tooltip layer that follows the active theme. Every interactive control
 
 ## 🚀 Installation Guide
 
-> DinoDash is a **developer/unpacked extension**. Follow the steps below to install it in Chrome.
+You can install DinoDash directly from the Chrome Web Store:
 
-### Step 1 — Download the Extension
+[**Install DinoDash on Chrome Web Store**](https://chrome.google.com/webstore/detail/placeholder-id) *(Link coming soon)*
 
-Clone or download this repository to your local machine:
-
-```bash
-git clone https://github.com/your-username/dino-enhanced.git
-```
-
-Or download the ZIP and extract it to a folder of your choice.
-
-### Step 2 — Open Chrome Extensions
-
-Open Google Chrome and navigate to:
-
-```
-chrome://extensions
-```
-
-Or go to **Menu (⋮)** → **Extensions** → **Manage Extensions**.
-
-### Step 3 — Enable Developer Mode
-
-In the top-right corner of the Extensions page, toggle **Developer mode** ON.
-
-### Step 4 — Load the Extension
-
-Click the **"Load unpacked"** button that appears, then select the root folder of this project (the folder containing `manifest.json`).
-
-### Step 5 — Open a New Tab
-
-Open a new tab in Chrome (`Ctrl+T` / `Cmd+T`). DinoDash will replace your default new tab page. 🎉
+Once installed, DinoDash will automatically replace your default new tab page. 🎉
 
 ---
 

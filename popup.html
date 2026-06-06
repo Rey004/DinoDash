@@ -8,195 +8,242 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ── Design tokens (defaults = dark theme) ── */
-        :root {
-            --bg:            #0c0808;
-            --surface:       rgba(15,6,6,0.92);
-            --border:        rgba(139,26,26,0.28);
-            --text:          #e0d4d4;
-            --text-muted:    rgba(224,212,212,0.5);
-            --accent:        #8b1a1a;
-            --accent-soft:   rgba(139,26,26,0.14);
-            --glow:          0 0 14px rgba(139,26,26,0.45);
-            --btn-bg:        #8b1a1a;
-            --btn-text:      #f0e4e4;
-            --input-bg:      rgba(10,4,4,0.95);
-            --select-bg:     rgba(18,8,8,0.95);
-            --logo-gradient: linear-gradient(90deg,#8b1a1a,#c0392b,#e0d4d4);
-            --t: 0.35s cubic-bezier(0.4,0,0.2,1);
-            --logo-bg-color: #0f0606;
-            --logo-char-color: #ffffff;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
-            width: 300px;
-            background: var(--bg);
-            color: var(--text);
-            transition: background var(--t), color var(--t);
+            width: 660px;
+            height: 350px;
+            background: #000000;
+            color: #ffffff;
             overflow: hidden;
+            position: relative;
+        }
+
+        /* ── Grain & Scanline Overlays ── */
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0.04;
+            mix-blend-mode: overlay;
+            background-image: radial-gradient(#ffffff 1px, transparent 1px);
+            background-size: 3px 3px;
+        }
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 98;
+            mix-blend-mode: overlay;
+            background: repeating-linear-gradient(rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 3px);
+        }
+
+        .popup-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
         }
 
         /* ── Header ── */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
         .header {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 18px 18px 14px;
-            border-bottom: 1px solid var(--border);
-            transition: border-color var(--t);
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .header:hover {
+            opacity: 0.8;
         }
 
         .dino-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        }
-        .popup-header__logo {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-        }
-        .header-text h1 {
-            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
-            color: var(--text);
-            opacity: 0.92;
-            transition: color var(--t), opacity 0.2s;
-        }
-
-        .header-text p {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 1px;
-            transition: color var(--t);
-        }
-
-        /* ── Score badge ── */
-        .score-bar {
-            display: flex;
-            gap: 8px;
-            padding: 10px 18px;
-            background: var(--accent-soft);
-            border-bottom: 1px solid var(--border);
-            transition: background var(--t), border-color var(--t);
-        }
-
-        .score-chip {
-            flex: 1;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 6px 10px;
-            text-align: center;
-            transition: background var(--t), border-color var(--t), box-shadow var(--t);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-
-        .score-chip .label {
-            font-size: 9px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            transition: color var(--t);
-        }
-
-        .score-chip .value {
-            font-size: 18px;
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            color: var(--accent);
-            margin-top: 1px;
-            transition: color var(--t);
-        }
-
-        /* ── Sections ── */
-        .section {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-            transition: border-color var(--t);
-        }
-
-        .section-title {
-            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            transition: color var(--t);
-        }
-
-        /* ── Rows ── */
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 0;
-        }
-
-        .row + .row { margin-top: 2px; }
-
-        .row-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .row-icon {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .row-icon svg {
-            width: 16px;
-            height: 16px;
-            color: var(--accent);
-            opacity: 0.85;
-            transition: color var(--t);
+
+        .popup-header__logo {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
         }
 
-        /* ── Select ── */
-        select {
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 5px 8px;
+        .header-text h1 {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .sys-status {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 9px;
+            letter-spacing: 0.25em;
+            color: rgba(255, 255, 255, 0.45);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* ── Grid Layout ── */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            padding: 12px 18px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .grid-column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+            height: 100%;
+        }
+
+        .column-header {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.25em;
+            color: rgba(255, 255, 255, 0.4);
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+            padding-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .column-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        /* Column scrollbars */
+        .column-content::-webkit-scrollbar {
+            width: 3px;
+        }
+        .column-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--select-bg);
-            color: var(--text);
+            padding: 10px;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        .row-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .row-icon {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.65;
+        }
+
+        .row-icon svg {
+            width: 12px;
+            height: 12px;
+            color: #ffffff;
+        }
+
+        select {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #000000;
+            color: #ffffff;
             cursor: pointer;
             outline: none;
-            transition: background var(--t), border-color var(--t), color var(--t), box-shadow var(--t);
-        }
-        select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent-soft), var(--glow);
+            transition: border-color 0.2s;
         }
 
-        /* ── Toggle switch ── */
+        select:focus {
+            border-color: #ffffff;
+        }
+
+        /* ── Toggle Switch ── */
         .switch {
             position: relative;
             display: inline-block;
-            width: 36px;
-            height: 20px;
+            width: 34px;
+            height: 18px;
             flex-shrink: 0;
         }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -204,84 +251,208 @@
             position: absolute;
             cursor: pointer;
             inset: 0;
-            background: rgba(0,0,0,0.15);
-            border-radius: 20px;
-            transition: background 0.3s;
-            border: 1px solid var(--border);
+            background: #000000;
+            border-radius: 18px;
+            transition: background 0.2s, border-color 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
         .slider::before {
             content: '';
             position: absolute;
-            width: 14px; height: 14px;
-            left: 2px; bottom: 2px;
-            background: white;
+            width: 10px;
+            height: 10px;
+            left: 3px;
+            bottom: 3px;
+            background: #ffffff;
             border-radius: 50%;
-            transition: transform 0.3s, background 0.3s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background 0.2s;
         }
-        input:checked + .slider { background: var(--accent); border-color: var(--accent); }
-        input:checked + .slider::before { transform: translateX(16px); }
+        input:checked + .slider {
+            background: #ffffff;
+            border-color: #ffffff;
+        }
+        input:checked + .slider::before {
+            transform: translateX(16px);
+            background: #000000;
+        }
 
-        /* ── Primary button ── */
+        /* ── Widget Manager Styles ── */
+        .widget-manage--expanded {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .widget-manage__hint {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .widget-tag-group {
+            margin-bottom: 8px;
+        }
+        .widget-tag-group:last-child {
+            margin-bottom: 0;
+        }
+        .widget-tag-group__label {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 4px;
+            display: block;
+        }
+        .widget-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .widget-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 5px 3px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .widget-tag--active {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #ffffff;
+        }
+        .widget-tag--inactive {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            padding-left: 3px;
+        }
+        .widget-tag__action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+        }
+        .widget-tag__action--remove {
+            background: rgba(0, 0, 0, 0.15);
+            color: #000000;
+        }
+        .widget-tag__action--add {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            margin-right: 1px;
+        }
+        .widget-tag__action--add:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* ── Profile & Action Layouts ── */
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 8px;
+        }
+        .score-chip {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 6px 4px;
+            text-align: center;
+        }
+        .score-chip .label {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .score-chip .value {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 2px;
+        }
+
+        .footer-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
         .btn-primary {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 7px;
-            margin: 14px 18px 0;
-            width: calc(100% - 36px);
-            padding: 11px;
-            border: none;
-            border-radius: 12px;
-            background: var(--btn-bg);
-            color: var(--btn-text);
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ffffff;
+            border-radius: 6px;
+            background: #ffffff;
+            color: #000000;
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             cursor: pointer;
-            box-sizing: border-box;
-            transition: background var(--t), color var(--t), transform 0.15s, box-shadow var(--t);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15), var(--glow);
+            transition: background 0.15s, color 0.15s;
         }
-        .btn-primary:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 4px 18px rgba(0,0,0,0.2), var(--glow);
-        }
-        .btn-primary:active { transform: scale(0.97); }
 
-        /* ── Secondary / ghost button (feedback link) ── */
+        .btn-primary:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn-ghost-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
         .btn-ghost {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 7px;
-            margin: 8px 18px 0;
-            width: calc(100% - 36px);
-            padding: 9px 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
+            gap: 4px;
+            padding: 6px;
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 10px;
             font-weight: 600;
-            border-radius: 12px;
-            background: transparent;
-            color: color-mix(in srgb, var(--text) 80%, transparent);
-            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             cursor: pointer;
             text-decoration: none;
-            box-sizing: border-box;
-            transition: color var(--t), border-color var(--t), background var(--t), transform 0.15s;
-        }
-        .btn-ghost:hover {
-            color: var(--accent);
-            border-color: var(--accent);
-            background: var(--accent-soft);
-        }
-        .btn-ghost:active { transform: scale(0.98); }
-        .btn-ghost svg {
-            width: 13px;
-            height: 13px;
-            flex-shrink: 0;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
         }
 
+        .btn-ghost:hover {
+            color: #ffffff;
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-ghost svg {
+            width: 10px;
+            height: 10px;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        /* ── Tooltips ── */
         [data-tooltip] {
             position: relative;
         }
@@ -289,256 +460,229 @@
             content: attr(data-tooltip);
             position: absolute;
             left: 50%;
-            bottom: calc(100% + 7px);
+            bottom: calc(100% + 6px);
             transform: translateX(-50%) translateY(3px);
-            z-index: 20;
+            z-index: 120;
             max-width: 180px;
-            padding: 5px 7px;
-            border-radius: 6px;
-            background: color-mix(in srgb, var(--surface) 82%, var(--accent));
-            color: var(--text);
-            border: 1px solid color-mix(in srgb, var(--accent) 46%, var(--border));
-            box-shadow: 0 6px 18px rgba(0,0,0,0.22), var(--glow);
-            font-size: 10px;
-            font-weight: 600;
-            line-height: 1.2;
+            padding: 4px 6px;
+            border-radius: 4px;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 9px;
+            font-family: 'JetBrains Mono', monospace;
             white-space: nowrap;
             pointer-events: none;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s ease;
+            transition: opacity 0.12s, transform 0.12s, visibility 0.12s;
         }
-        [data-tooltip]:hover::after,
-        [data-tooltip]:focus-visible::after,
-        [data-tooltip]:focus-within::after {
+        [data-tooltip]:hover::after {
             opacity: 1;
             visibility: visible;
             transform: translateX(-50%) translateY(0);
         }
 
-
-
         /* ── Footer ── */
-        .footer {
-            padding: 0 0 14px;
+        .footer-bar {
             display: flex;
-            flex-direction: column;
-            gap: 0;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 18px 8px;
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-size: 8px;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
         }
 
-        /* ── Version badge ── */
-        .version {
-            text-align: center;
-            font-size: 10px;
-            color: var(--text-muted);
-            padding: 8px 18px 12px;
-            transition: color var(--t);
-        }
-
-        /* Enhanced mode off state */
-        body.disabled .score-bar,
-        body.disabled .section:not(.always-on) {
-            opacity: 0.4;
+        /* Enhanced mode disabled state styling: only dims dependent controls, keeping navigation fully functional */
+        body.disabled #section-game,
+        body.disabled #section-widgets,
+        body.disabled #section-appearance {
+            opacity: 0.35;
             pointer-events: none;
         }
-
-        .widget-manage { display: flex; flex-direction: column; gap: 8px; }
-        .widget-manage__trigger {
-            display: flex; align-items: center; justify-content: space-between; gap: 10px;
-            width: 100%; padding: 10px 12px; font-family: inherit; font-size: 13px; font-weight: 600;
-            color: var(--text); background: color-mix(in srgb, var(--accent-soft) 50%, transparent);
-            border: 1px solid var(--border); border-radius: 10px; cursor: pointer;
-        }
-        .widget-manage__trigger:hover { border-color: var(--accent); }
-        .widget-manage__trigger-label {
-            display: inline-flex; align-items: center; gap: 9px; min-width: 0;
-        }
-        .widget-manage__icon {
-            width: 26px; height: 26px; border-radius: 8px; display: inline-flex;
-            align-items: center; justify-content: center; flex-shrink: 0;
-            color: var(--accent); background: var(--accent-soft); border: 1px solid var(--border);
-        }
-        .widget-manage__icon svg { width: 15px; height: 15px; }
-        .widget-manage__trigger[aria-expanded="true"] .widget-manage__chevron { transform: rotate(180deg); }
-        .widget-manage__chevron { width: 16px; height: 16px; transition: transform 0.2s ease; }
-        .widget-manage__panel { padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); }
-        .widget-manage__panel.hidden { display: none; }
-        .widget-manage__hint { margin: 0 0 10px; font-size: 11px; line-height: 1.4; color: var(--text-muted); }
-        .widget-manage__empty { margin: 0; font-size: 12px; color: var(--text-muted); }
-        .widget-tag-group { margin-bottom: 10px; }
-        .widget-tag-group:last-child { margin-bottom: 0; }
-        .widget-tag-group__label {
-            display: block; margin-bottom: 6px; font-size: 10px; font-weight: 700;
-            letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted);
-        }
-        .widget-tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
-        .widget-tag {
-            display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px 4px 10px;
-            border-radius: 999px; font-size: 12px; font-weight: 600;
-        }
-        .widget-tag--active { background: var(--accent); color: var(--btn-text); border: 1px solid var(--accent); }
-        .widget-tag--inactive {
-            background: transparent; color: var(--text); border: 1px dashed var(--border); padding-left: 4px;
-        }
-        .widget-tag__action {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 20px; height: 20px; padding: 0; border: none; border-radius: 50%;
-            font-size: 14px; font-weight: 700; cursor: pointer;
-        }
-        .widget-tag__action--remove {
-            background: color-mix(in srgb, var(--btn-text) 18%, transparent); color: var(--btn-text);
-        }
-        .widget-tag__action--add { background: var(--accent-soft); color: var(--accent); margin-right: 2px; }
-        .widget-tag__action--add:hover { background: var(--accent); color: var(--btn-text); }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="dino-icon">
-            <img class="brand-logo popup-header__logo"
-                src="assets/brand/logo-dark.webp"
-                alt="DinoDash" width="36" height="36" decoding="async">
-        </div>
-        <div class="header-text">
-            <h1>DinoDash</h1>
-            <p>New Tab Experience</p>
-        </div>
-    </div>
+    <!-- Grain and scanline overlays -->
+    <div class="grain"></div>
+    <div class="scanlines"></div>
 
-    <!-- Score bar -->
-    <div class="score-bar">
-        <div class="score-chip">
-            <div class="label">Hi Score</div>
-            <div class="value" id="popup-hi-score">—</div>
-        </div>
-        <div class="score-chip">
-            <div class="label">Theme</div>
-            <div class="value" id="popup-theme-name" style="font-size:13px;margin-top:4px;">—</div>
-        </div>
-    </div>
-
-    <!-- General section -->
-    <div class="section always-on">
-        <div class="section-title">General</div>
-
-        <div class="row">
-            <div class="row-label">
-                <span class="row-icon">
-                    <!-- Power / bolt -->
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z" fill="currentColor" stroke="none"/>
-                    </svg>
-                </span>
-                Enhanced Mode
+    <div class="popup-wrapper">
+        <!-- Header -->
+        <div class="header-container">
+            <a class="header" href="https://use-dino-dash.vercel.app/" target="_blank" rel="noopener noreferrer"
+               data-tooltip="Visit DinoDash website">
+                <div class="dino-icon">
+                    <img class="brand-logo popup-header__logo"
+                        src="assets/brand/logo-dark.webp"
+                        alt="DinoDash logo" width="28" height="28" decoding="async">
+                </div>
+                <div class="header-text">
+                    <h1>DinoDash</h1>
+                </div>
+            </a>
+            <div class="sys-status">
+                <span class="pulse-dot"></span>sys · active
             </div>
-            <label class="switch">
-                <input type="checkbox" id="enhancement-toggle">
-                <span class="slider"></span>
-            </label>
         </div>
-    </div>
 
-    <!-- Widgets section -->
-    <div class="section" id="section-widgets">
-        <div id="popup-widget-list"></div>
-    </div>
+        <!-- Dashboard Grid (3 Columns) -->
+        <div class="dashboard-grid">
+            <!-- Column 1: Core Controls -->
+            <div class="grid-column">
+                <div class="column-header">sys.control</div>
+                <div class="column-content">
+                    <!-- General -->
+                    <div class="section-card">
+                        <div class="section-title">General</div>
+                        <div class="row">
+                            <div class="row-label">
+                                <span class="row-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z" fill="currentColor" stroke="none"/>
+                                    </svg>
+                                </span>
+                                Enhanced Mode
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="enhancement-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
 
-    <!-- Appearance section -->
-    <div class="section" id="section-appearance">
-        <div class="section-title">Appearance</div>
+                    <!-- Game -->
+                    <div class="section-card" id="section-game">
+                        <div class="section-title">Game Options</div>
+                        <div class="row">
+                            <div class="row-label">
+                                <span class="row-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
+                                    </svg>
+                                </span>
+                                Particles
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="popup-particles" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
 
-        <div class="row" data-tooltip="Choose the active theme">
-            <div class="row-label">
-                <span class="row-icon">
-                    <!-- Palette -->
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10 1.1 0 2-.9 2-2v-.5c0-.55.45-1 1-1h2c2.76 0 5-2.24 5-5C22 6.48 17.52 2 12 2zm-5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-                    </svg>
-                </span>
-                Theme
+                        <div class="row">
+                            <div class="row-label">
+                                <span class="row-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
+                                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                                    </svg>
+                                </span>
+                                Sound
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="popup-audio" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <div class="row-label">
+                                <span class="row-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+                                    </svg>
+                                </span>
+                                Messages
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="popup-messages" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <select id="popup-theme-select">
-                <option value="dark" selected>Dark Valley</option>
-                <option value="mysticForest">Mystic Forest</option>
-            </select>
+
+            <!-- Column 2: Widgets Tag Manager -->
+            <div class="grid-column">
+                <div class="column-header">sys.widgets</div>
+                <div class="column-content">
+                    <div class="section-card" id="section-widgets" style="height: 100%;">
+                        <div id="popup-widget-list" data-widget-display="expanded"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3: Stats & Actions -->
+            <div class="grid-column">
+                <div class="column-header">sys.profile</div>
+                <div class="column-content">
+                    <!-- Score & Theme Chip -->
+                    <div class="section-card">
+                        <div class="score-grid">
+                            <div class="score-chip">
+                                <div class="label">Hi Score</div>
+                                <div class="value" id="popup-hi-score">00000</div>
+                            </div>
+                            <div class="score-chip">
+                                <div class="label">Theme</div>
+                                <div class="value" id="popup-theme-name">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appearance Theme selector -->
+                    <div class="section-card" id="section-appearance">
+                        <div class="row" data-tooltip="Choose active theme">
+                            <div class="row-label">
+                                <span class="row-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10 1.1 0 2-.9 2-2v-.5c0-.55.45-1 1-1h2c2.76 0 5-2.24 5-5C22 6.48 17.52 2 12 2zm-5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                    </svg>
+                                </span>
+                                Active
+                            </div>
+                            <select id="popup-theme-select">
+                                <option value="dark" selected>Dark Valley</option>
+                                <option value="mysticForest">Mystic Forest</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="footer-actions">
+                        <button class="btn-primary" id="open-tab-btn" data-tooltip="Open DinoDash in a new tab">Open New Tab</button>
+                        <div class="btn-ghost-row">
+                            <a class="btn-ghost" id="docs-btn" href="https://use-dino-dash.vercel.app/docs" target="_blank" rel="noopener noreferrer" data-tooltip="Read docs">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                <span>Docs</span>
+                            </a>
+                            <a class="btn-ghost" id="feedback-btn" href="https://use-dino-dash.vercel.app/feedback" target="_blank" rel="noopener noreferrer" data-tooltip="Submit feedback">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                                </svg>
+                                <span>Feedback</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom status bar -->
+        <div class="footer-bar">
+            <span>sys · dinodash</span>
+            <span>v1.0</span>
         </div>
     </div>
-
-    <!-- Game section -->
-    <div class="section" id="section-game">
-        <div class="section-title">Game</div>
-
-        <div class="row">
-            <div class="row-label">
-                <span class="row-icon">
-                    <!-- Sparkles / particles -->
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/>
-                        <path d="M5 15l.75 2.25L8 18l-2.25.75L5 21l-.75-2.25L2 18l2.25-.75L5 15z"/>
-                        <path d="M19 14l.75 2.25L22 17l-2.25.75L19 20l-.75-2.25L16 17l2.25-.75L19 14z"/>
-                    </svg>
-                </span>
-                Particles
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="popup-particles" checked>
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="row">
-            <div class="row-label">
-                <span class="row-icon">
-                    <!-- Speaker / sound -->
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
-                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-                    </svg>
-                </span>
-                Sound
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="popup-audio" checked>
-                <span class="slider"></span>
-            </label>
-        </div>
-
-        <div class="row">
-            <div class="row-label">
-                <span class="row-icon">
-                    <!-- Message / speech bubble -->
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
-                    </svg>
-                </span>
-                Messages
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="popup-messages" checked>
-                <span class="slider"></span>
-            </label>
-        </div>
-
-    </div>
-
-    <!-- Footer buttons -->
-    <div class="footer">
-        <button class="btn-primary" id="open-tab-btn" data-tooltip="Open DinoDash in a new tab">Open New Tab</button>
-        <a class="btn-ghost" id="feedback-btn"
-           href="mailto:revanshurevu@gmail.com?subject=DinoDash%20Feedback%20%2F%20Bug%20Report&body=Describe%20your%20issue%20or%20idea%3A%0A%0A---%0AVersion%3A%20v1.0%0ABrowser%3A%20"
-           target="_blank" rel="noopener noreferrer"
-           data-tooltip="Send feedback or report a bug">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-            </svg>
-            <span>Feedback &amp; Bugs</span>
-        </a>
-    </div>
-
-    <div class="version">DinoDash v1.0</div>
 
     <script type="module" src="popup.js"></script>
 </body>

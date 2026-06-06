@@ -12,13 +12,50 @@ export const GameStats = {
     load() {
         return new Promise((resolve) => {
             if (!chrome.storage?.local) {
+                try {
+                    const localStats = localStorage.getItem('gameStats');
+                    if (localStats) {
+                        this.data = { ...DEFAULT_STATS, ...JSON.parse(localStats) };
+                    }
+                    const localHiScore = localStorage.getItem('hiScore');
+                    if (localHiScore) {
+                        this.data.hiScore = parseInt(localHiScore, 10) || 0;
+                    }
+                } catch (e) {
+                    console.error("Failed to load gameStats from localStorage:", e);
+                }
                 resolve(this.data);
                 return;
             }
             chrome.storage.local.get(['gameStats', 'hiScore'], (result) => {
-                this.data = { ...DEFAULT_STATS, ...result.gameStats };
-                if (result.hiScore > (this.data.hiScore || 0)) {
-                    this.data.hiScore = result.hiScore;
+                const hasChromeData = result.gameStats !== undefined || result.hiScore !== undefined;
+                if (hasChromeData) {
+                    this.data = { ...DEFAULT_STATS, ...result.gameStats };
+                    if (result.hiScore > (this.data.hiScore || 0)) {
+                        this.data.hiScore = result.hiScore;
+                    }
+                } else {
+                    try {
+                        const localStats = localStorage.getItem('gameStats');
+                        const localHiScore = localStorage.getItem('hiScore');
+                        let migrated = false;
+                        if (localStats) {
+                            this.data = { ...DEFAULT_STATS, ...JSON.parse(localStats) };
+                            migrated = true;
+                        }
+                        if (localHiScore) {
+                            this.data.hiScore = parseInt(localHiScore, 10) || 0;
+                            migrated = true;
+                        }
+                        if (migrated) {
+                            chrome.storage.local.set({
+                                gameStats: this.data,
+                                hiScore: this.data.hiScore,
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Failed to migrate gameStats from localStorage:", e);
+                    }
                 }
                 resolve(this.data);
             });
@@ -26,7 +63,15 @@ export const GameStats = {
     },
 
     save() {
-        if (!chrome.storage?.local) return;
+        if (!chrome.storage?.local) {
+            try {
+                localStorage.setItem('gameStats', JSON.stringify(this.data));
+                localStorage.setItem('hiScore', this.data.hiScore.toString());
+            } catch (e) {
+                console.error("Failed to save gameStats to localStorage:", e);
+            }
+            return;
+        }
         chrome.storage.local.set({
             gameStats: this.data,
             hiScore: this.data.hiScore,

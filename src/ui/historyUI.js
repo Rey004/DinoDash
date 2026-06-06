@@ -108,7 +108,21 @@ async function loadPinnedHistory() {
     return new Promise((resolve) => {
         if (chrome.storage?.local) {
             chrome.storage.local.get(['pinnedHistory'], (result) => {
-                pinnedHistory = result.pinnedHistory || [];
+                if (result.pinnedHistory !== undefined) {
+                    pinnedHistory = result.pinnedHistory || [];
+                } else {
+                    try {
+                        const local = localStorage.getItem('dinoPinnedHistory');
+                        if (local) {
+                            pinnedHistory = JSON.parse(local);
+                            chrome.storage.local.set({ pinnedHistory });
+                        } else {
+                            pinnedHistory = [];
+                        }
+                    } catch {
+                        pinnedHistory = [];
+                    }
+                }
                 resolve(pinnedHistory);
             });
         } else {
@@ -126,7 +140,11 @@ function savePinnedHistory() {
     if (chrome.storage?.local) {
         chrome.storage.local.set({ pinnedHistory });
     } else {
-        localStorage.setItem('dinoPinnedHistory', JSON.stringify(pinnedHistory));
+        try {
+            localStorage.setItem('dinoPinnedHistory', JSON.stringify(pinnedHistory));
+        } catch (e) {
+            console.error("Failed to save pinnedHistory to localStorage:", e);
+        }
     }
 }
 
@@ -696,6 +714,70 @@ function renderHistoryItemMarkup(item) {
     `;
 }
 
+function checkAndRenderHistoryPermission(callback) {
+    if (typeof chrome !== 'undefined' && chrome.permissions) {
+        chrome.permissions.contains({ permissions: ['history'] }, (hasIt) => {
+            const panel = document.getElementById('history-panel');
+            if (!panel) return;
+
+            // Remove any existing permission card
+            panel.querySelector('.history-permission-card')?.remove();
+
+            const tabsContainer = panel.querySelector('.history-tabs-container');
+            const filtersEl = document.getElementById('history-filters');
+            const listContainer = document.getElementById('history-list-container');
+            const insightsContainer = document.getElementById('history-insights-container');
+
+            if (!hasIt) {
+                // Hide containers
+                if (tabsContainer) tabsContainer.classList.add('hidden');
+                if (filtersEl) filtersEl.classList.add('hidden');
+                if (listContainer) listContainer.classList.add('hidden');
+                if (insightsContainer) insightsContainer.classList.add('hidden');
+
+                // Create and append permission card
+                const card = document.createElement('div');
+                card.className = 'history-permission-card';
+                card.innerHTML = `
+                    <h3 class="insights-title">History Logs Disabled</h3>
+                    <p class="widget-manage__hint">DinoDash needs your permission to read browsing history to display recent pages, pinned items, and category insights.</p>
+                    <button class="btn-primary" id="enable-history-btn">Enable History Logs</button>
+                `;
+                panel.appendChild(card);
+
+                // Bind listener
+                const enableBtn = card.querySelector('#enable-history-btn');
+                if (enableBtn) {
+                    enableBtn.addEventListener('click', () => {
+                        chrome.permissions.request({ permissions: ['history'] }, (granted) => {
+                            if (granted) {
+                                checkAndRenderHistoryPermission(callback);
+                            }
+                        });
+                    });
+                }
+            } else {
+                // Show containers depending on active tab
+                if (tabsContainer) tabsContainer.classList.remove('hidden');
+                if (filtersEl) {
+                    filtersEl.classList.toggle('hidden', activeTab !== 'history');
+                }
+                if (activeTab === 'analytics') {
+                    if (listContainer) listContainer.classList.add('hidden');
+                    if (insightsContainer) insightsContainer.classList.remove('hidden');
+                } else {
+                    if (listContainer) listContainer.classList.remove('hidden');
+                    if (insightsContainer) insightsContainer.classList.add('hidden');
+                }
+
+                callback();
+            }
+        });
+    } else {
+        callback();
+    }
+}
+
 export function loadHistory() {
     if (chrome.history?.search) {
         try {
@@ -793,7 +875,9 @@ export function toggleHistoryPanel() {
         window.dispatchEvent(new CustomEvent('dino-history-opened'));
         
         loadPinnedHistory().then(() => {
-            loadHistory();
+            checkAndRenderHistoryPermission(() => {
+                loadHistory();
+            });
         });
     } else {
         sidebar.classList.remove('is-open');

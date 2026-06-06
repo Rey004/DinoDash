@@ -42,38 +42,16 @@ const THEMES = {
     },
 };
 
-// ── Apply theme CSS variables to popup ───────────────────────────────────────
+// ── Apply theme name update to popup ─────────────────────────────────────────
 function applyTheme(key) {
     const resolvedKey = THEMES[key] ? key : 'dark';
     const t = THEMES[resolvedKey];
-    const r = document.documentElement;
-
-    r.style.setProperty('--bg',            t.bg);
-    r.style.setProperty('--surface',       t.surface);
-    r.style.setProperty('--border',        t.border);
-    r.style.setProperty('--text',          t.text);
-    r.style.setProperty('--text-muted',    t.textMuted);
-    r.style.setProperty('--accent',        t.accent);
-    r.style.setProperty('--accent-soft',   t.accentSoft);
-    r.style.setProperty('--glow',          t.glow);
-    r.style.setProperty('--btn-bg',        t.btnBg);
-    r.style.setProperty('--btn-text',      t.btnText);
-    r.style.setProperty('--input-bg',      t.inputBg);
-    r.style.setProperty('--select-bg',     t.selectBg);
-    r.style.setProperty('--logo-gradient', t.logoGradient);
-    r.style.setProperty('--logo-bg-color',   t.logoBg);
-    r.style.setProperty('--logo-char-color', t.logoChar);
 
     document.body.setAttribute('data-theme', resolvedKey);
 
     // Update the theme name chip
     const nameEl = document.getElementById('popup-theme-name');
     if (nameEl) nameEl.textContent = t.name;
-
-    // Tint the slider checked colour via accent
-    document.querySelectorAll('input:checked + .slider').forEach(el => {
-        el.style.background = t.accent;
-    });
 
     return resolvedKey;
 }

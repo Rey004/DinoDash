@@ -28,7 +28,7 @@ canvas {
     pointer-events: none;
 }
 
-/* â”€â”€ Extension brand (upper left) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Extension brand (upper left) ─────────────────────────────────────────── */
 .newtab-brand {
     position: absolute;
     top: 20px;
@@ -37,8 +37,21 @@ canvas {
     align-items: center;
     gap: 10px;
     z-index: 12;
-    pointer-events: none;
+    pointer-events: auto;
     user-select: none;
+    text-decoration: none;
+    color: inherit;
+    padding: 4px 6px;
+    margin: -4px -6px;
+    border-radius: 8px;
+    transition: background var(--t), opacity 0.2s;
+}
+.newtab-brand:hover {
+    background: var(--accent-soft);
+}
+.newtab-brand:hover .newtab-brand__text {
+    opacity: 1;
+    color: var(--accent-color);
 }
 .brand-logo {
     object-fit: contain;

@@ -89,3 +89,36 @@
     font-weight: 700;
     color: var(--text-color);
 }
+
+
+/* ── Settings → Documentation link ─────────────────────────────────────────── */
+.settings-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin: 12px 0 0;
+    padding: 8px 12px;
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    background: transparent;
+    color: color-mix(in srgb, var(--text-color) 80%, transparent);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--t), border-color var(--t), background var(--t), transform 0.15s;
+}
+.settings-link:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    background: var(--accent-soft);
+}
+.settings-link:active {
+    transform: scale(0.98);
+}
+.settings-link svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}

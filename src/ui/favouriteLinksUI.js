@@ -11,15 +11,44 @@ let dragLink = null;
 function storageGet() {
     return new Promise((resolve) => {
         if (!chrome.storage?.local) {
-            resolve(null);
+            try {
+                const local = localStorage.getItem(STORAGE_KEY);
+                resolve(local ? JSON.parse(local) : null);
+            } catch {
+                resolve(null);
+            }
             return;
         }
-        chrome.storage.local.get([STORAGE_KEY], (result) => resolve(result[STORAGE_KEY] || null));
+        chrome.storage.local.get([STORAGE_KEY], (result) => {
+            if (result[STORAGE_KEY]) {
+                resolve(result[STORAGE_KEY]);
+            } else {
+                try {
+                    const local = localStorage.getItem(STORAGE_KEY);
+                    if (local) {
+                        const parsed = JSON.parse(local);
+                        chrome.storage.local.set({ [STORAGE_KEY]: parsed });
+                        resolve(parsed);
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Failed to migrate favouriteLinks from localStorage:", e);
+                }
+                resolve(null);
+            }
+        });
     });
 }
 
 function save() {
-    if (!chrome.storage?.local) return;
+    if (!chrome.storage?.local) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {
+            console.error("Failed to save favouriteLinks to localStorage:", e);
+        }
+        return;
+    }
     chrome.storage.local.set({ [STORAGE_KEY]: data });
 }
 

@@ -6,7 +6,7 @@
 
 **An advanced, modern reimagining of the classic Chrome Dino offline game — right in your new tab.**
 
-[![Version](https://img.shields.io/badge/version-1.0-crimson?style=flat-square&logo=google-chrome)](manifest.json)
+[![Version](https://img.shields.io/badge/version-1.1.0-crimson?style=flat-square&logo=google-chrome)](manifest.json)
 [![Manifest](https://img.shields.io/badge/Manifest-v3-blue?style=flat-square)](manifest.json)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](#)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-yellow?style=flat-square&logo=googlechrome)](https://developer.chrome.com/docs/extensions/)

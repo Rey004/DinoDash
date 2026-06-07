@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DinoDash - Interactive New Tab & Enhanced Dino Game",
-  "version": "1.0",
+  "version": "1.1.0",
   "description": "Transform your new tab with productivity widgets, smart history, favorite links, themes, and an enhanced Dino game.",
   "icons": {
     "16": "assets/brand/icon-16.png",

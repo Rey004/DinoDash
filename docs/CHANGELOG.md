@@ -4,6 +4,28 @@ All notable changes to **DinoDash** will be documented here.
 
 ---
 
+## v1.1.0
+
+This release improves onboarding privacy by making the browsing history permission optional, and introduces a complete dashboard-style redesign for the extension popup.
+
+### What's new
+
+#### 🧠 Optional History Permission (Onboarding & Privacy)
+- Moved the `history` permission from mandatory to optional. This removes the *"Read and change your browsing history"* warning when installing the extension from the Chrome Web Store.
+- Designed and implemented a themed permission request screen inside the History Sidebar. Users can easily grant the history permission with a single click if they wish to use history logs, search, and analytics widgets.
+- Retained the `tabs` permission under permissions to keep Enhanced Mode tab auto-reloads functioning seamlessly.
+
+#### ⚙️ Popup Dashboard Redesign
+- Redesigned the extension popup into a wide 3-column horizontal layout (`660px` x `350px`) to match the premium retro-cinematic monochrome aesthetic of the DinoDash landing page.
+- Columns are divided into: Controls (toggles for game audio, particles, messages), Widget Manager (expanded tag-list settings), and Profile (scores, theme settings, support buttons).
+- Decoupled the popup theme from runtime tab updates, securing the high-contrast retro-cinematic look.
+
+#### 📁 Storage Migration & System Optimization
+- Migrated data layers for favourite links, game stats, pinned history, and widget preferences to `chrome.storage.local` with automatic migration from `localStorage` on load and fallback support outside of the extension sandbox.
+- Scaled and updated all brand PNG icons (`16x16`, `24x24`, `32x32`, `48x48`, `128x128`) from the updated `logo-dark.webp` asset.
+
+---
+
 ## v1.0.0
 
 The first stable release. DinoDash launches as a complete new-tab experience built around the classic Dino runner, with widgets, themes, smart history, and analytics.

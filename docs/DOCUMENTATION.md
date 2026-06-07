@@ -301,7 +301,7 @@ You can uninstall the extension at any time and your data goes with it.
 Yes. Everything runs locally. The only thing that needs the network is the small favicon next to a link, but the rest of the experience works without it.
 
 **Will my data sync across devices?**
-Not in v1.0.0. Your data stays on the device where you installed the extension.
+Not in v1.1.0. Your data stays on the device where you installed the extension.
 
 **Can I bring back the default Chrome new tab?**
 Yes. Open the toolbar popup and turn off **Enhanced Mode**. Chrome's default new tab returns immediately. Turn it back on whenever you want DinoDash again.
